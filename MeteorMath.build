@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<!--
+Made by Sawyer Wetson- Finsihed 2/14/25
+
+The game and high score are no longer being maintained.
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Meteor Math (HTML)</title>
+        <marquee>Music by Sakura-Girl, Downloaded from www.chosic.com</marquee>
+        <audio src="Sakura-Girl-Daisy-chosic.com_.mp3" type="audio/mp3" autoplay loop></audio>
+        <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:700|Google+Sans+Display:400,500|Material+Icons" rel="stylesheet">
+        <style>
+            h1, h2, h3, h4, h5, h6, i, b, u, ul, ol, li, button, p, .c3 {
+                -webkit-user-select: none;
+                 -khtml-user-select: none;
+                   -moz-user-select: none;
+                    -ms-user-select: none; 
+                        user-select: none; 
+                            outline: none;
+            }
+            ::-webkit-scrollbar {
+                width: 14px;
+            }
+            ::-webkit-scrollbar-track {
+                background-color: white;
+            }
+            ::-webkit-scrollbar-thumb {
+                background-color: silver;
+                border-radius: 20px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background-color: darkgrey;
+            }
+            body {
+                display: none;
+                margin: 0;
+                overflow: hidden;
+            }
+            h1 {
+                font-family: "Josefin Sans", sans-serif;
+                color: #f44436;
+                font-size: 64px;
+                text-align: center;
+                margin: 0;
+            }
+            .text {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translateY(-50%)translateX(-50%);
+                width: 80%;
+            }
+            h1 span {
+                color: #636363;
+            }
+            h3 {
+                font-family: 'Google Sans Display', sans-serif;
+                font-weight: 400;
+                text-align: center;
+                font-size: 20px;
+            }
+            p {
+                text-align: center;
+                font-family: "Google Sans Display", sans-serif;
+                color: #636363;
+                font-weight: 400;
+                font-size: 15px;
+            }
+            p b {
+                font-weight: 500;
+            }
+            .circle {
+                position: fixed;
+                background-color: rgba(230, 62, 96, 0.3);
+                border-radius: 50%;
+            }
+            #background {
+                position: fixed;
+                top: 0;
+                left: 64px;
+                right: 0;
+                bottom: 0;
+                z-index: -1;
+            }
+            @keyframes circleAnim1 {
+                0% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0;
+                }
+                100% {
+                    opacity: 1;
+                }
+            }
+            @keyframes circleAnim2 {
+                0% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(0);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+            @keyframes circleAnim3 {
+                0% {
+                    transform: translateX(0px)translateY(0px);
+                }
+                40% {
+                    transform: translateX(10px)translateY(-5px);
+                }
+                80% {
+                    transform: translateX(-30px)translateY(25px);
+                }
+                100% {
+                    transform: translateX(0px)translateY(0px);
+                }
+            }
+            button.play {
+                border-radius: 20px 10px 30px 40px;
+                padding: 20px;
+                animation: radiusAnim 5s infinite;
+                border: 0;
+                background-color: #f44436;
+                color: white;
+                transition: all 1s;
+                margin: 0 50px;
+            }
+            button.play i.material-icons {
+                font-size: 48px;
+                transition: all 1s;
+            }
+            button.play:hover {
+                background-color: #212121;
+                transform: scale(1.1);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            }
+            @keyframes radiusAnim {
+                0% {
+                    border-radius: 20px 10px 30px 40px;
+                }
+                30% {
+                    border-radius: 30px 40px 20px 10px;
+                }
+                60% {
+                    border-radius: 10px 30px 40px 20px;
+                }
+                80% {
+                    border-radius: 40px 20px 10px 30px;
+                }
+                100% {
+                    border-radius: 20px 10px 30px 40px;
+                }
+            }
+            button.score {
+                padding: 12px;
+                border-radius: 50%;
+                border: 0;
+                background-color: #636363;
+                color: white;
+                transition: all 0.1s;
+            }
+            button.score:hover {
+                padding: 20px;
+                background-color: #212121;
+            }
+            button.score i.material-icons {
+                font-size: 36px;
+            }
+            button.help i.material-icons {
+                color: #636363;
+                background: white;
+                border-radius: 50%;
+                transition: all 0.3s;
+            }
+            button.help:hover i.material-icons {
+                color: #212121;
+            }
+            #gameScrn {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: white;
+                display: none;
+                animation: fade 1s;
+            }
+            @keyframes fade {
+                from {
+                    opacity: 0.7;
+                    transform: scale(0);
+                    border-radius: 100%;
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                    border-radius: 0;
+                }
+            }
+            h2, .h2 {
+                text-align: center;
+                background-color: rgba(222, 17, 69, 0.4);
+                width: 80%;
+                margin: 20px auto;
+                padding: 12px 0;
+                border-radius: 2px;
+                font-family: "Josefin Sans", sans-serif;
+                color: rgb(145, 11, 47);
+                display: block;
+            }
+            i.material-icons.home {
+                position: fixed;
+                top: 30px;
+                left: 30px;
+                color: #636363;
+                transition: all 0.1s;
+            }
+            i.material-icons.home:hover {
+                color: #212121;
+                transform: scale(1.5);
+            }
+            .game {
+                font-size: 64px;
+            }
+            #oper {
+                color: #212121;
+            }
+            #num1, #num2 {
+                color: #f44436;
+            }
+            .scene {
+                display: none;
+            }
+            .keypad {
+                width: 100%;
+                border-radius: 5px;
+                overflow: hidden;
+            }
+            .container {
+                width: 200px;
+                position: relative;
+                background-color: white;
+            }
+            .container:after {
+                content: "";
+                clear: both;
+                display: table;
+            }
+            .container .c3 {
+                box-sizing: border-box;
+                width: 33%;
+                padding: 10px;
+                border: 1px solid white;
+                background-color: #EFEFEF;
+                float: left;
+                text-align: center;
+                font-family: "Google Sans Display", sans-serif;
+                font-size: 19px;
+                font-weight: 500;
+            }
+            .container .c3.w {
+                background-color: white;
+            }
+            .container .c3:hover {
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+            .container .c3:active {
+                background-color: rgba(0, 0, 0, 0.2);
+            }
+            #asteroid {
+                position: fixed;
+                z-index: -2;
+                top: -120px;
+                right: 125px;
+                width: 100px;
+                height: 100px;
+                background-color: brown;
+                border-radius: 10px 30px 20px 40px;
+                box-shadow: 0 0 32px rgba(235, 132, 21, 0.7);
+                color: transparent;
+                background-image: url("Meteor-Background-PNG.png");
+            }
+            @keyframes asteroidFall {
+                to {
+                    top: 260px;
+                    background-image: url("Meteor-Background-PNG.png");
+                    box-shadow: 0 16px 64px rgba(235, 53, 21, 0.7);
+                }
+            }
+            .points {
+                position: absolute;
+                top: 35px;
+                right: 35px;
+                font-family: "Google Sans Display", sans-serif;
+                font-weight: 500;
+                font-size: 15px;
+            }
+            .screen {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: white;
+                display: none;
+            }
+            ul, ol {
+                text-align: center;
+                font-family: "Google Sans Display", sans-serif;
+                font-weight: 500;
+                font-size: 15px;
+                margin: 30px 0;
+                padding: 0;
+            }
+            ul li, ol li {
+                line-height: 25px;
+            }
+            a {
+                color: #636363;
+                border-bottom: 1px dashed;
+                text-decoration: none;
+            }
+            a:hover {
+                color: #f44436;
+            }
+        styles for dark mode */
+    body.dark-mode {
+        background-color: #222;
+        color: #fff;
+    }
+
+    body.dark-mode h1,
+    body.dark-mode h2,
+    body.dark-mode h3 {
+        color: #f44436;
+    }
+
+    body.dark-mode .circle {
+        background-color: rgba(230, 62, 96, 0.1);
+    }
+
+    body.dark-mode button.play {
+        background-color: #f44436;
+        color: #fff;
+    }
+
+    body.dark-mode button.play:hover {
+        background-color: #fff;
+        color: #f44436;
+    }
+
+    /* Settings button style */
+    .settings-btn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #f44436;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .settings-btn:hover {
+        transform: rotate(90deg);
+    }
+
+    /* Settings screen style */
+    #settingsScrn {
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    body.dark-mode #settingsScrn {
+        background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    .settings-option {
+        margin: 20px 0;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #f44436;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+     #settingsScrn {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: none;
+            z-index: 1000;
+        }
+
+        body.dark-mode #settingsScrn {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .settings-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .close-settings {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+            #leaderboardScrn {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(255, 255, 255, 0.9);
+        display: none;
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .leaderboard-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    #personalBestList {
+        list-style-position: inside;
+        padding: 0;
+    }
+
+    #personalBestList li {
+        margin: 10px 0;
+    }
+
+    .home {
+        cursor: pointer;
+        margin-top: 20px;
+    }
+
+    body.dark-mode #leaderboardScrn {
+        background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    body.dark-mode .leaderboard-content {
+        background-color: #333;
+        color: white;
+    }
+</style>
+    </head>
+    <body>
+         <div id='leaderboardScrn' class='screen'>
+    <div class='leaderboard-content'>
+        <h2>Personal Best Scores</h2>
+        <ol id="personalBestList">
+            <!-- Personal best scores will be inserted here dynamically -->
+        </ol>
+        <p><button class='score' onclick="resetScores()">Reset Scores</button></p>
+        <i class='material-icons home' onclick="closeLeaderboard()">home</i>
+    </div>
+</div>
+  <button class="settings-btn" onclick="openSettings()">
+        <i class="material-icons">settings</i>
+    </button>
+
+    <div id="settingsScrn">
+        <div class="settings-content">
+            <span class="close-settings" onclick="closeSettings()">&times;</span>
+            <h2>Settings</h2>
+            <div class="settings-option">
+                <label for="darkModeToggle">Dark Mode</label>
+                <label class="switch">
+                    <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-option">
+                <button onclick="contactDeveloper()">Contact the Developer</button>
+            </div>
+        </div>
+    </div>
+
+        <button class='settings-btn' onclick="openSettings()">
+            
+    <i class="material-icons">settings</i>
+</button>
+        <button class="settings-btn" onclick="document.getElementById('settingsScrn').style.display='block';">
+    <i class="material-icons">settings</i>
+</button>
+
+<div id="settingsScrn" class="screen">
+    <div class="text">
+        <h2>Settings</h2>
+        <div class="settings-option">
+            <label for="darkModeToggle">Dark Mode</label>
+            <label class="switch">
+                <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="settings-option">
+            <button onclick="contactDeveloper()">Contact the Developer</button>
+        </div>
+    </div>
+    <i class="material-icons home" onclick="this.parentElement.style.display='none';">home</i>
+</div>
+        <div id='background'></div>
+        <div class='text'>
+            <h1>Meteor<span>Math</span></span></h1>
+            <h3>A game to test your math skills</h3><br>
+            <p style='margin-bottom: 0;'>
+                <button class='score' onclick="document.getElementById('leaderboardScrn').style.display='block';"><i class="material-icons">bar_chart</i></button>
+                <button class='play' onclick="startGame()"><i class="material-icons">play_arrow</i></button>
+                <button class='score help' onclick="document.getElementById('helpScrn').style.display='block';"><i class="material-icons">help</i></button>
+            </p>
+        </div>
+        <div id='gameScrn'>
+            <div class='scene'>
+                <div class='text'>
+                    <h2>How To</h2>
+                    <p>Meteors are falling and only math can save the world from disaster! Solve the problems to blast the meteor. Meteors get faster and problems get hardder as you go. Game over once an asteroid hits the earth.</p>
+                    <p>Use the keypad provided on the screen to type in answers.</p>
+                    <br>
+                    <p><button class='score' onclick="openScene(1)"><i class='material-icons'>play_arrow</i></button></p>
+                </div>
+            </div>
+            <div class='scene'>
+                <div class='text'>
+                    <h1 id='equa' class='game'><span id='num1'>n</span> <span id='oper'>&plus;</span> <span id='num2'>p</span> <span style='color:#212121;'>=</span> <span id='answ'></span></h1>
+                    <br>
+                    <div class='keypad'>
+                        <div class='container'>
+                            <div class='c3'>1</div>
+                            <div class='c3'>2</div>
+                            <div class='c3'>3</div>
+                        </div>
+                        <div class='container'>
+                            <div class='c3'>4</div>
+                            <div class='c3'>5</div>
+                            <div class='c3'>6</div>
+                        </div>
+                        <div class='container'>
+                            <div class='c3'>7</div>
+                            <div class='c3'>8</div>
+                            <div class='c3'>9</div>
+                        </div>
+                        <div class='container'>
+                            <div class='c3'>del</div>
+                            <div class='c3'>0</div>
+                            <div class='c3'>clr</div>
+                        </div>
+                    </div>
+                </div>
+                <div id='asteroid'></div>
+                <span class='points'>Score: <span id='ptsto'>0</span></span>
+            </div>
+            <i class='material-icons home' onclick="stopGame()">home</i>
+        </div>
+        <div id='gameOverScrn' class='screen'>
+            <div class='text'>
+                <h1>Game Over</h1>
+                <span class='h2'>You scored: <span id='pointsPrev'>0</span></span>
+                <p><button onclick="copyScore()">Copy Score</button></p>
+                <p style='font-size:21px;'>You have doomed all of Earth!</p>
+                <p>Please Try Again!! <b></b></p>
+                <p style='margin:0;'><button class='score' onclick="this.parentElement.parentElement.parentElement.style.display='none';"><i class='material-icons'>home</i></button></p>
+            </div>
+        </div>
+        <div id='leaderboardScrn' class='screen'>
+            <div class='text'>
+                <h2>High Score</h2>
+
+                <p><b>TOP FIVE:</b></p>
+                <ol>
+                    <li style='color:goldenrod;font-size:20px;'><a 
+            </div>
+            <i class='material-icons home' onclick="this.parentElement.style.display='none';">home</i>
+        </div>
+        <div id='helpScrn' class='screen'>
+            <div class='text' style='overflow:auto;max-height:300px;'>
+                <h2>Help</h2>
+                <p><b>Objective:</b> Use to keypad to answer math questions before the meteor hits Earth.</p>
+                <p>Every 10 question, the questions get harder. Within each round of 10 questions, at the 5th, 7th, and 9th question the speed increases. Afterwards, it resets to the beginning except with a slightly faster start.</p>
+                <p>Good luck and enjoy the game!</p>
+            </div>
+            <i class='material-icons home' onclick="this.parentElement.style.display='none';">home</i>
+        </div>
+        <script>
+              function openLeaderboard() {
+        document.getElementById('leaderboardScrn').style.display = 'flex';
+        displayLeaderboard();
+    }
+
+    function closeLeaderboard() {
+        document.getElementById('leaderboardScrn').style.display = 'none';
+    }
+
+    function displayLeaderboard() {
+        let scores = JSON.parse(localStorage.getItem('personalBestScores')) || [];
+        let leaderboardHTML = '';
+        scores.forEach((score, index) => {
+            leaderboardHTML += `<li>${score}</li>`;
+        });
+        document.getElementById('personalBestList').innerHTML = leaderboardHTML;
+    }
+    function resetScores() {
+        localStorage.removeItem('personalBestScores');
+        displayLeaderboard();
+    }
+              function openSettings() {
+            document.getElementById('settingsScrn').style.display = 'block';
+            document.querySelector('.text').style.display = 'none';
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsScrn').style.display = 'none';
+            document.querySelector('.text').style.display = 'block';
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        function contactDeveloper() {
+            window.location.href = "https://mail.google.com/mail/u/0/#inbox?compose=DmwnWrRmVgptLqDPbCmkGXZfKdJrrLxzblJdmJlSPfCQLjmVtpScGnXQLnNWpxnhbQWCqNClhMVq";
+        }
+
+        // Load dark mode setting on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('darkModeToggle').checked = true;
+            }
+        });
+
+    // Load dark mode setting on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('darkModeToggle').checked = true;
+        }
+    });
+         var allElem = document.querySelectorAll('*');
+            for ( var i = 0; i < allElem.length; i++ ) {
+                allElem[i].setAttribute('draggable', 'false');
+            }
+            var animations = ["circleAnim1 ", "circleAnim2 ", "circleAnim3 ", "none "];
+            function setCircles() {
+                for ( var i = 0; i < 25; i++ ) {
+                    var newCircle = document.createElement('DIV');
+                    var randomWidth = Math.floor(Math.random() * 30) + 10+"px";
+                    var randomTime = eval(Math.floor(Math.random() * 10) + 1);
+                    newCircle.classList.add('circle');
+                    newCircle.style.top = Math.floor(Math.random() * 600) - 200 +"px";
+                    newCircle.style.left = Math.floor(Math.random() * document.body.offsetWidth + 200) - 200 +"px";
+                    newCircle.style.width = randomWidth;
+                    newCircle.style.height = randomWidth;
+                    newCircle.style.animation = animations[Math.floor(Math.random() * animations.length)]+" "+randomTime+"s infinite";
+                    document.getElementById('background').appendChild(newCircle);
+                }
+            }
+       function updateLeaderboard(score) {
+        let scores = JSON.parse(localStorage.getItem('personalBestScores')) || [];
+        scores.push(score);
+        scores.sort((a, b) => b - a);
+        scores = scores.slice(0, 5); // Keep only top 5 scores
+        localStorage.setItem('personalBestScores', JSON.stringify(scores));
+        displayLeaderboard();
+    }
+
+    function displayLeaderboard() {
+        let scores = JSON.parse(localStorage.getItem('personalBestScores')) || [];
+        let leaderboardHTML = '';
+        scores.forEach((score, index) => {
+            leaderboardHTML += `<li>${score}</li>`;
+        });
+        document.getElementById('personalBestList').innerHTML = leaderboardHTML;
+    }
+
+    function resetScores() {
+        localStorage.removeItem('personalBestScores');
+        displayLeaderboard();
+    }
+
+    // Call this function when the game ends
+    function gameOver() {
+        document.getElementById('gameOverScrn').style.display = 'block';
+        clearInterval(timer);
+        stopGame();
+        updateLeaderboard(scorefin);
+    }
+
+    // Modify your existing game over logic to call the gameOver function
+    // Replace the existing game over code with this:
+    if (timeLft <= 0) {
+        gameOver();
+    }
+
+    // Call displayLeaderboard when the leaderboard screen is opened
+    document.querySelector('button.score').onclick = function() {
+        document.getElementById('leaderboardScrn').style.display='block';
+        displayLeaderboard();
+    };
+            var x;
+            var op;
+            var y;
+            var plLim;
+            var mlLim;
+            var qNum;
+            var prevSpeedInit;
+            var speed;
+            var speedIncr;
+            var timer;
+            var timeLft;
+            var score;
+            var scorefin;
+            var timerX;
+            
+            function startGame() {
+                document.getElementById('gameScrn').style.display = "block";
+                openScene(0);
+                document.getElementById('ptsto').innerHTML = "0";
+                clearTimeout(timer);
+                x;
+                op;
+                y;
+                plLim = 10;
+                mlLim = 10;
+                qNum = 0;
+                prevSpeedInit = 10;
+                speed = 10;
+                speedIncr = 4;
+                timer;
+                timeLft = 0;
+                score = 0;
+                scorefin = 0;
+                timerX = 0;
+            }
+            
+            function stopGame() {
+                document.getElementById('gameScrn').style.display = "none";
+            }
+            
+            function openScene(num) {
+                for ( var i = 0; i < document.getElementsByClassName('scene').length; i++ ) {
+                    document.getElementsByClassName('scene')[i].style.display = "none";
+                }
+                document.getElementsByClassName('scene')[num].style.display = "block";
+                if ( num === 1 ) {
+                    setEq();
+                }
+            }
+            
+            var operators = ["&plus;", "&times;"];
+            
+            function setEq() {
+                if ( qNum % 10 === 0  && qNum !== 0) {
+                    prevSpeedInit-=0.2;
+                    plLim += 10;
+                    mlLim += 2;
+                    speed = prevSpeedInit;
+                    speedIncr = 4;
+                }
+                if ( qNum % 10 === 5 || qNum % 10 === 7 || qNum % 10 === 9 ) {
+                    speed -= speedIncr;
+                    speed = Math.round(speed);
+                    speedIncr /= 2.5;
+                }
+                score += 100/speed+plLim+mlLim*3;
+                timeLft = Math.round(speed);
+                timer = setInterval(function(){
+                    timeLft-=1;
+                    document.getElementById('asteroid').innerHTML = timeLft;
+                    if ( timeLft <= 0 ) {
+                        document.getElementById('gameOverScrn').style.display = 'block';
+                        clearInterval(timer);
+                        stopGame();
+                    }
+                }, 1000);
+                document.getElementById('asteroid').style.animation = "";
+                document.getElementById('answ').innerHTML = "";
+                op = operators[Math.floor(Math.random() * operators.length)];
+                if ( op === "&plus;" ) {
+                    x = Math.floor(Math.random() * plLim) + 1;
+                    y = Math.floor(Math.random() * plLim) + 1;
+                }
+                if ( op === "&times;" ) {
+                    x = Math.floor(Math.random() * mlLim) + 1;
+                    y = Math.floor(Math.random() * mlLim) + 1;
+                }
+                document.getElementById('oper').innerHTML = op;
+                document.getElementById('num1').innerHTML = x;
+                document.getElementById('num2').innerHTML = y;
+                setTimeout(function(){
+                    document.getElementById('asteroid').style.animation = "asteroidFall "+speed+"s ease-in";
+                }, 100);
+            }
+            
+            var keypads = document.getElementsByClassName('c3');
+            for ( var i = 0; i < keypads.length; i++ ) {
+                keypads[i].setAttribute('onclick', 'pressKeypad('+i+')');
+            }
+            function pressKeypad(indx) {
+                if ( indx <= 8 ) {
+                    document.getElementById('answ').innerHTML += eval(indx+1);
+                } else if ( indx === 9 ) {
+                    document.getElementById('answ').innerHTML = document.getElementById('answ').innerHTML.substring(0, document.getElementById('answ').innerHTML.length - 1);
+                } else if ( indx === 10 ) {
+                    document.getElementById('answ').innerHTML += "0";
+                } else if ( indx === 11 ) {
+                    document.getElementById('answ').innerHTML = "";
+                }
+                checkAnsw(document.getElementById('answ').innerHTML);
+            }
+            
+            function checkAnsw(val) {
+                if ( op === "&plus;" && val == eval(x+y) ) {
+                    document.getElementById('ptsto').innerHTML = eval(parseInt(document.getElementById('ptsto').innerHTML)+Math.floor(score));
+                    scorefin += Math.floor(score);
+                    clearInterval(timer);
+                    qNum++;
+                    //0.1 sec delay to prevent lag
+                    setTimeout(function(){
+                        setEq();
+                    }, 100);
+                }
+                if ( op === "&times;" && val == eval(x*y) ) {
+                    document.getElementById('ptsto').innerHTML = eval(Math.round(parseInt(document.getElementById('ptsto').innerHTML)+Math.floor(score*2)));
+                    scorefin += Math.floor(score*2);
+                    clearInterval(timer);
+                    qNum++;
+                    //0.1 sec delay to prevent lag
+                    setTimeout(function(){
+                        setEq();
+                    }, 100);
+                }
+                document.getElementById('pointsPrev').innerHTML = document.getElementById('ptsto').innerHTML;
+            }
+            
+            document.body.onload = function() {
+                document.body.style.display = "block";  
+                setCircles();
+            };
+            
+            var copyText = document.getElementById('scrFntx');
+            
+            function copyScore() {
+                const el = document.createElement('textarea');
+                el.value = scorefin.toString();
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+            } 
+            
+            document.body.oncontextmenu = function() {
+                return false;  
+            };
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+    <script>
+
+    var save = function(){
+        html2canvas(document.body,{
+            onrendered: function(canvas) {
+                b64Img = canvas.toDataURL();
+                window.top.postMessage(b64Img, "");
+            },
+            allowTaint : false,
+            useCORS: true,
+            width:500,
+            height:500,
+        });
+    };
+    document.documentElement.onkeydown = function(e) {
+        if (e.keyCode === 27) {
+            save();
+        }
+    };
+    </script>
+    </body>
+</html>
